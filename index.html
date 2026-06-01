@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>照镜子</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: "Microsoft YaHei", sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+}
+.page {
+    display: none;
+    text-align: center;
+    width: 90%;
+    max-width: 600px;
+}
+.page.active { display: block; }
+
+/* -------- 第1页: 按钮 -------- */
+.start-btn {
+    padding: 24px 64px;
+    font-size: 28px;
+    color: #fff;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 8px 30px rgba(102,126,234,0.4);
+}
+.start-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(102,126,234,0.6);
+}
+.start-btn:active { transform: scale(0.97); }
+
+/* -------- 第2页: 进度条 -------- */
+.progress-hint { font-size: 24px; margin-bottom: 40px; }
+.progress-bar-bg {
+    width: 100%;
+    height: 24px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 12px;
+    overflow: hidden;
+}
+.progress-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    border-radius: 12px;
+    transition: width 0.1s linear;
+}
+
+/* -------- 第3页: 照片展示 -------- */
+.photo-frame {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+.photo-frame img {
+    width: 100%;
+    display: block;
+}
+.back-link {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 12px 36px;
+    font-size: 16px;
+    color: #aaa;
+    border: 1px solid #555;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: transparent;
+}
+.back-link:hover {
+    color: #fff;
+    border-color: #888;
+}
+</style>
+</head>
+<body>
+
+<!-- 第1页 -->
+<div class="page active" id="page1">
+    <button class="start-btn" onclick="startProgress()">开始照镜子</button>
+</div>
+
+<!-- 第2页 -->
+<div class="page" id="page2">
+    <div class="progress-hint">正在打开摄像头，照镜子</div>
+    <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+</div>
+
+<!-- 第3页 -->
+<div class="page" id="page3">
+    <div class="photo-frame">
+        <img src="照片女.jpg" alt="照片">
+    </div>
+    <br><span class="back-link" onclick="goPage1()">← 重新开始</span>
+</div>
+
+<script>
+function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+function goPage1() {
+    document.getElementById('progressFill').style.width = '0%';
+    showPage('page1');
+}
+
+function startProgress() {
+    document.getElementById('progressFill').style.width = '0%';
+    showPage('page2');
+
+    const fill = document.getElementById('progressFill');
+    let pct = 0;
+    const timer = setInterval(() => {
+        pct += 1;
+        fill.style.width = pct + '%';
+        if (pct >= 100) {
+            clearInterval(timer);
+            setTimeout(() => showPage('page3'), 200);
+        }
+    }, 30);
+}
+</script>
+</body>
+</html>
